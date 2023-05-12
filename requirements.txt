@@ -18,3 +18,4 @@ sklearn
 ipykernel
 vega_datasets
 geopy
+torchvision
