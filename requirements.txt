@@ -16,3 +16,5 @@ seaborn==0.12.2
 altair==4.2.2
 sklearn
 ipykernel
+vega_datasets
+geopy
