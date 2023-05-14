@@ -1,6 +1,6 @@
-from utils import *
 import streamlit as st
-from streamlit_folium import st_folium
+import os
+from torchvision import transforms
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -42,5 +42,5 @@ if input is not None:
     image = image_transforms['test'](image)
     # Make prediction
     prediction = predict(image, model)
-    result = 'Yes' if prediction == 1 else 'No'
-    st.write("prediction of methane leak: "+ result)
+    result = 'YES' if prediction == 1 else 'NO'
+    st.success("METHANE LEAK : "+ result)
