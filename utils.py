@@ -9,6 +9,7 @@ from torchvision import datasets
 import pandas as pd
 import numpy as np 
 from sklearn.metrics import accuracy_score, roc_auc_score
+import streamlit as st
 
 
 # metadata cleaning
