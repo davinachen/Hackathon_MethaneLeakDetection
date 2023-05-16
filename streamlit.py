@@ -17,7 +17,10 @@ from folium.plugins import Draw
 
 # Load previously trained model 
 model = torch.load('./data/models/dataResNet_pretrained_resnet50.pt')
-
+@st.cache_data
+def get_data():
+    df = pd.read_csv('data/metadata.csv')
+    return df
 
 # Test image transformation
 image_transforms = { 
@@ -94,7 +97,7 @@ with map_coord:
         c1, c2 = st.columns([2,1])
 
         #read metadata and get image coordinates
-        df = pd.read_csv('data/metadata.csv')
+        df = get_data()
         filtered_df = df[df['path'].str.contains(input.name[:-4])]
         lat = filtered_df['lat'].values[0]
         lon = filtered_df['lon'].values[0]
@@ -219,6 +222,7 @@ with dashboard:
     # Display centered Markdown text
     st.markdown(centered_text, unsafe_allow_html=True)
 
+    df = get_data()
     file = st.file_uploader('Upload 5 monitoring areas: ', type='tif', accept_multiple_files=True)
     c3, c4, c5, c6, c7 = st.columns(5)
     name_list = ['Joshua', 'Davina', 'Aline', 'Namrata', 'Ugo']
