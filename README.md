@@ -1,17 +1,22 @@
-# QB_Hackathon
+# How Data & AI can help detect Methane emissions
+**Centrale - Essec Tech Challenge with Quantum Black, AI by McKinsey.**
 
+The dataset consists of 430 satellite images from SRON Netherlands Institute for Space Research. The images were of size 64x64 in greyscale. 
+The goal of the hackathon was to dentify the probability for each location to contain a methane plume. We developped a CNN architecture with 3 convolutional layers followed by 3 max pooling layers, and 2 fully connected layers. We achieved the following performance with an AUC of 0.85.
 
-## What's up
-- some data analysis of the data source ( 1/4 in India, rest all around the world)
-- Balanced dataset (almost 50/50 of plume, no_plume data)
-- First model results quite promising (need to compare to other group, but at least the streamlit team can start working with the first model trained that is on the git repo) : 80% accu, AUC_score above 0.9
+We also developped use cases where this model can be used to drive positive impact. The two cases we implemented are: 
+- **Non-governmental organizations**: 
+     - Monitoring & Accountability: monitor emissions from industrial sites and ensure reporting and compliance from entitites to the emission reduction targets 
+     - Support transparency and reporting and assess progress toward global goals 
+     - Advocacy & policy influence: influence policymakers to adopt more ambitious targets for methane reduction, aligned with the goals of the Paris Agreement and the global methane pledge
+- **Oil & gas companies**:
+  - Organizations can identify potential sources of emissions and work to implement mitigation strategies and promote sustainability
+  - Show commitment to the Global mission of methane reduction 
+  - Mitigate revenue loss resulting from product loss, market penalties, operational disturbances or environmental compliance costs
+  - Employing our solution to increase credibility among stakeholders, customers, and investors and increase long-term revenue potentia
 
-## Ideas improvement:
-- do an **weighted ensemble method** using deep results and classical ML with geography (country, prior knowledge on leak existing proba, wind speed, ecological reports)
-- data augmentation
-- runn for a longer period of time
-- data augmentation
-- one model per country/wind speed average slices/temperature/methane companies ?
+# Team Members:
+*Namrata Tadanki, Joshua Fan, Ugo Muhieddine, Chih-Tung Chen, Aline Helburg*
 
-#### classical ML
-find info on why leaks usually appears
+# Credits
+- [SRON Netherlands Institute for Space Research](https://earth.sron.nl/methane-emissions/)
