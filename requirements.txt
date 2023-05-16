@@ -1,3 +1,4 @@
+streamlit
 folium==0.14.0
 geopy==2.3.0
 matplotlib==3.5.2
