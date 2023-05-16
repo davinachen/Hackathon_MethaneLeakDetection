@@ -93,7 +93,7 @@ with map_coord:
         c1, c2 = st.columns([2,1])
 
         #read metadata and get image coordinates
-        df = pd.read_csv('data/metadata.csv')
+        df = pd.read_csv('./data/metadata.csv')
         filtered_df = df[df['path'].str.contains(input.name[:-4])]
         lat = filtered_df['lat'].values[0]
         lon = filtered_df['lon'].values[0]
