@@ -16,7 +16,7 @@ from PIL import Image
 from folium.plugins import Draw
 
 # Load previously trained model 
-# model = torch.load('./data/models/dataResNet_pretrained_resnet50.pt')
+model = torch.load('./data/models/dataResNet_pretrained_resnet50.pt')
 
 
 # Test image transformation
@@ -81,9 +81,9 @@ with image_upload:
         image = Image.open(file_path).convert('RGB') # supposedly the code is rgb and not grey scale
         image = image_transforms['test'](image)
 
-        # prediction = predict(image, model)
-        # result = 'Yes' if prediction == 1 else 'No'
-        # col1.write("Prediction of methane leak: "+ result)
+        prediction = predict(image, model)
+        result = 'Yes' if prediction == 1 else 'No'
+        col1.write("Prediction of methane leak: "+ result)
 
     st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -263,9 +263,9 @@ with dashboard:
             image = Image.open(file[i]).convert('RGB') # supposedly the code is rgb and not grey scale
             image = image_transforms['test'](image)
 
-            # prediction = predict(image, model)
-            # result = 'Yes' if prediction == 1 else 'No'
-            # column.write("Prediction of methane leak: "+ result)
+            prediction = predict(image, model)
+            result = 'Yes' if prediction == 1 else 'No'
+            column.write("Prediction of methane leak: "+ result)
 
             #adding site points to a map 
             filtered_df = df[df['path'].str.contains(file[i].name[:-4])]
