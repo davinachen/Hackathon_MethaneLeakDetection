@@ -282,7 +282,6 @@ with dashboard:
             latitude = lat
             longitude = lon
             
-            result = 'No'
             if result == 'No':
                 folium.Marker(location=[latitude, longitude],popup=f'Site {i+1}', icon=folium.Icon(icon="fire", prefix='fa', color='red')).add_to(m)
             else: 
