@@ -16,7 +16,7 @@ from PIL import Image
 from folium.plugins import Draw
 
 # Load previously trained model 
-model = torch.load('./data/models/dataResNet_pretrained_resnet50.pt')
+# model = torch.load('./data/models/dataResNet_pretrained_resnet50.pt')
 
 
 # Test image transformation
@@ -47,10 +47,21 @@ map_coord = st.container()
 dashboard = st.container()
 
 with head: 
-    st.title('Methane Detection')
+    st.title(' ')
+#     logo = Image.open('logo.png')
+#     st.image(logo, width=200)
+#     st.write('Clearing the Air, One Emission at a Time.')
 
 with image_upload: 
-    st.header('Upload an image for methane leaks detection:')
+    centered_text1 = """
+    <div style="text-align: center;">
+        <h3>CleanR Methane Detection Model</h1>
+        <p>Upload an image for methane leaks detection:</p>
+    </div>
+    """
+
+    # Display centered Markdown text
+    st.markdown(centered_text1, unsafe_allow_html=True)
     col1, col2 = st.columns([2, 1])
     input = col1.file_uploader("Choose a file", type='tif')
     if input is not None:
@@ -70,9 +81,9 @@ with image_upload:
         image = Image.open(file_path).convert('RGB') # supposedly the code is rgb and not grey scale
         image = image_transforms['test'](image)
 
-        prediction = predict(image, model)
-        result = 'Yes' if prediction == 1 else 'No'
-        col1.write("Prediction of methane leak: "+ result)
+        # prediction = predict(image, model)
+        # result = 'Yes' if prediction == 1 else 'No'
+        # col1.write("Prediction of methane leak: "+ result)
 
     st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -96,6 +107,7 @@ with map_coord:
 
     latitude = lat
     longitude = lon
+
     m = folium.Map(location=[latitude, longitude], zoom_start=10)
     folium.Marker(location=[latitude, longitude],popup='Satellite Image', color='lightgray').add_to(m)
     # m.add_child(folium.LatLngPopup()) #only if we want to see the coord when click
@@ -161,7 +173,7 @@ with map_coord:
                 folium.Marker([element['lat'], element['lon']], folium.Icon(icon="fire", prefix='fa', color='pink')).add_to(m)
             elif 'center' in element:
                 folium.Marker([element['center']['lat'], element['center']['lon']]\
-                            , icon= folium.Icon(icon="fire", prefix='fa', color='pink'), popup= 'Gas Plants').add_to(m)
+                            , popup= 'Gas Plants', icon= folium.Icon(icon="fire", prefix='fa', color='pink')).add_to(m)
 
     with c1: 
         #add map and draw tools to left column
@@ -198,7 +210,7 @@ with dashboard:
 
     centered_text = """
     <div style="text-align: center;">
-        <h3>Monitoring Dashboard</h1>
+        <h3>CleanR Monitoring Dashboard</h1>
         <p>Real-time monitoring on all sites</p>
     </div>
     """
@@ -208,6 +220,8 @@ with dashboard:
 
     file = st.file_uploader('Upload 5 monitoring areas: ', type='tif', accept_multiple_files=True)
     c3, c4, c5, c6, c7 = st.columns(5)
+    name_list = ['Joshua', 'Davina', 'Aline', 'Namrata', 'Ugo']
+    pos_neg = ['+', '-']
     if file is not None:
         #create a temp dir to store the image file
         temp_dir = tempfile.TemporaryDirectory() 
@@ -225,13 +239,33 @@ with dashboard:
             column = [c3, c4, c5, c6, c7][i]
             column.image(converted_image, caption=f'site {i+1}', use_column_width=True)
 
+            #make a button to show side bar information
+            if column.button(f'Site Information', key=f'SiteInformationButton{i}'):
+                with st.sidebar:
+                    filtered_df = df[df['path'].str.contains(file[i].name[:-4])]
+                    lat = filtered_df['lat'].values[0]
+                    lon = filtered_df['lon'].values[0]
+                    location = get_location_by_coordinates(lat, lon)
+                    st.write((lat,lon))
+                    st.write('Country: ', location.raw['address']['country'])
+                    st.write('State: ', location.raw['address']['state'])
+                    st.write('Site Manager: ', name_list[i])
+                    bar1 = st.progress(80, text='Production Volume')
+                    bar2 = st.progress(90, text='Utilization Rate')
+                    st.metric(label="Temperature", value=f'{random.randint(10,90)} °C', delta=f'{random.choice(pos_neg)}{round(random.uniform(0.5,3),2)} °C')
+                    with st.expander("Local Authorities info: "):
+                        st.button('For Regulatory Compliance')
+                        st.button('For Reporting and Communication')
+                        st.button('For Incident Management')
+
+
             #check the file path and make prediction
             image = Image.open(file[i]).convert('RGB') # supposedly the code is rgb and not grey scale
             image = image_transforms['test'](image)
 
-            prediction = predict(image, model)
-            result = 'Yes' if prediction == 1 else 'No'
-            column.write("Prediction of methane leak: "+ result)
+            # prediction = predict(image, model)
+            # result = 'Yes' if prediction == 1 else 'No'
+            # column.write("Prediction of methane leak: "+ result)
 
             #adding site points to a map 
             filtered_df = df[df['path'].str.contains(file[i].name[:-4])]
@@ -248,7 +282,11 @@ with dashboard:
             latitude = lat
             longitude = lon
             
-            folium.Marker(location=[latitude, longitude],popup=f'Site {i+1}', color='lightgray').add_to(m)
+            result = 'No'
+            if result == 'No':
+                folium.Marker(location=[latitude, longitude],popup=f'Site {i+1}', icon=folium.Icon(icon="fire", prefix='fa', color='red')).add_to(m)
+            else: 
+                folium.Marker(location=[latitude, longitude],popup=f'Site {i+1}', icon=folium.Icon(color="green")).add_to(m)
         #add draw option
         Draw(export=True).add_to(m)
         #display map
